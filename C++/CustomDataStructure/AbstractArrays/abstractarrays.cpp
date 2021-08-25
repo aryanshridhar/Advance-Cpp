@@ -61,7 +61,30 @@ class AbstractArray {
     }
 
     int binary_search(int value){ // O(nlogn) + O(logn) = O(nlogn) -- For unsorted
- 
+        int start = 0;
+        int end = array_size-1;
+
+        if(pointer[start] == value){
+            return start;
+        } else if (pointer[end] == value){
+            return end;
+        } else {
+            while(start <= end){
+                int mid = (start + end)/2;
+                
+                if(pointer[mid] == value){
+                    return mid;
+                }
+                if(pointer[mid] > value){
+                    end = mid - 1;
+                }
+                else {
+                    start = mid + 1;
+                }
+            }
+        }
+
+        return -1;
     }
 };
 
@@ -85,6 +108,12 @@ int main(){
     // Currently the array is - [1,2,8];
     std::cout << "Index of element 8 is " << marks.linear_search(8) << std::endl;
 
+    AbstractArray nums(100,6);
+    nums.set_array(5,10,67,333,1000,2000);
+
+    nums.show();
+
+    std::cout << "Value is at :" << nums.binary_search(67) << std::endl;
 
     return 0;
 }
