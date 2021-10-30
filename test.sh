@@ -1,3 +1,4 @@
+#!/bin/bash
 # Quick script to test all cpp files
 
 extension="*.cpp"
