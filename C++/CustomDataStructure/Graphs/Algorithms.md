@@ -16,6 +16,7 @@
 <li>DFS - Assign minimum of current and vector value.</li>
 
 <li>In cases of weighted graph - Dijkstra algorithm.</li>
+<li>Why not BFS - https://stackoverflow.com/questions/30409493/using-bfs-for-weighted-graphs.</li>
 </ul>
 
 </ul>
@@ -46,5 +47,6 @@
 
 <ul>
 <li>If a graph is DAG, it's topological sort must exists.</li>
+<li>It is also implied that if topo sort doesn't exists, the graph must be cyclic at some point.</li>
 <li>We can apply Dijkstra in case of DAG but the weights must be non negative.</li>
 </ul>
