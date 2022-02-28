@@ -5,6 +5,7 @@
 
 using namespace std;
 
+// Better TC than Dijkstra
 class Graph {
 public:
   vector<pair<int, int>> adj[10000];
