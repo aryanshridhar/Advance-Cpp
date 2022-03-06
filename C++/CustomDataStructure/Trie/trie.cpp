@@ -1,86 +1,83 @@
 #include <fstream>
 #include <iostream>
-#include <vector>
 
 using namespace std;
 
-const int TRIE_SIZE = 26;
+struct Node {
+  Node *link[26];
+  bool flag = false;
 
-class Trie {
-public:
-  vector<Trie *> children;
-  int nEoW; // number of end of words (Represents the number of strings that end
-            // here).
+  bool containerChar(char ch) { return link[ch - 'a'] != NULL; }
 
-  Trie() {
-    nEoW = 0;
-    for (int i = 0; i < TRIE_SIZE; i++) {
-      children.push_back(NULL);
-    }
-  }
+  void put(char ch, Node *node) { link[ch - 'a'] = node; }
+
+  Node *get(char ch) { return link[ch - 'a']; }
+
+  void setFlag(bool b) { flag = b; }
+
+  bool getFlag() { return flag; }
 };
 
-void insert(Trie *root, string s) {
-  Trie *p = root;
-  for (int i = 0; i < s.length(); i++) {
-    int index = s[i] - 'a';
+class Trie {
+private:
+  Node *root;
 
-    if (p->children[index] == NULL) {
-      p->children[index] = new Trie();
+public:
+  Trie() { root = new Node(); }
+
+  void insert(string word) {
+    Node *node = root;
+    for (int i = 0; i < word.length(); i++) {
+      if (!node->containerChar(word[i])) {
+        node->put(word[i], new Node());
+      }
+
+      node = node->get(word[i]);
     }
-    p = p->children[index];
+
+    node->setFlag(true);
   }
 
-  p->nEoW++;
-}
+  bool search(string word) {
+    Node *node = root;
+    for (int i = 0; i < word.length(); i++) {
+      if (!node->containerChar(word[i])) {
+        return false;
+      }
 
-bool search(Trie *root, string s) {
-  Trie *p = root;
-  for (int i = 0; i < s.length(); i++) {
-    int index = s[i] - 'a';
-    if (p->children[index] == NULL) {
-      return false;
+      node = node->get(word[i]);
     }
-    p = p->children[index];
-  }
 
-  if (p != NULL && p->nEoW == 0) {
+    if (node->getFlag()) {
+      return true;
+    }
+
     return false;
   }
-  return true;
-}
 
-bool delete_string(Trie *root, string s) {
-  Trie *p = root;
-  for (int i = 0; i < s.length(); i++) {
-    int index = s[i] - 'a';
-    if (p->children[index] == NULL) {
-      return false;
+  void erase(string word) {
+    Node *node = root;
+    for (int i = 0; i < word.length(); i++) {
+      if (!node->containerChar(word[i])) {
+        return;
+      }
+
+      node = node->get(word[i]);
     }
-    p = p->children[index];
+
+    node->setFlag(false);
   }
 
-  if (p != NULL && p->nEoW != 0) {
-    // The string is actually present.
-    p->nEoW--;
+  bool startsWith(string word) {
+    Node *node = root;
+    for (int i = 0; i < word.length(); i++) {
+      if (!node->containerChar(word[i])) {
+        return false;
+      }
+
+      node = node->get(word[i]);
+    }
+
     return true;
   }
-  return false;
-}
-
-int main() {
-  Trie *root = new Trie();
-
-  insert(root, "abcde");
-  insert(root, "abcfg");
-  insert(root, "akjl");
-  insert(root, "kopl");
-
-  cout << search(root, "abcde") << endl;
-
-  delete_string(root, "abcde");
-
-  cout << search(root, "abcde") << endl;
-
-  return 0;
-}
+};
